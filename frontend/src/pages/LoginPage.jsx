@@ -16,7 +16,7 @@ export default function LoginPage() {
       // Redirect to dashboard
       window.location.href = "/dashboard";
     } catch (err) {
-      setError("Invalid email or password");
+      setError("Invalid email/username or password");
     }
   };
 
@@ -32,10 +32,11 @@ export default function LoginPage() {
           <p className="text-red-600 text-sm mb-3 text-center">{error}</p>
         )}
 
+        {/* Accepts email OR username */}
         <input
           className="w-full p-2 mb-4 border rounded"
-          type="email"
-          placeholder="Email"
+          type="text"
+          placeholder="Email or Username"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
