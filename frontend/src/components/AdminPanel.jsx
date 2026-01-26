@@ -154,15 +154,15 @@ function AdminPanel() {
                     </button>
                 </div>
 
-                <div className="admin-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 300px', gap: 'var(--spacing-xl)' }}>
-                    <div className="admin-main">
+                <div className="admin-layout">
+                    <div className="admin-primary">
                         <section className="admin-section">
                             <h2>Add New Question</h2>
 
                             {success && <div className="alert alert-success">{success}</div>}
                             {error && <div className="alert alert-error">{error}</div>}
 
-                            <form onSubmit={handleSubmit}>
+                            <form onSubmit={handleSubmit} className="admin-question-form">
                                 <div className="form-group">
                                     <label htmlFor="question_text">Question</label>
                                     <input
@@ -173,6 +173,7 @@ function AdminPanel() {
                                         value={formData.question_text}
                                         onChange={handleChange}
                                         required
+                                        className="form-input"
                                     />
                                 </div>
 
@@ -187,6 +188,7 @@ function AdminPanel() {
                                             value={formData.option_a}
                                             onChange={handleChange}
                                             required
+                                            className="form-input"
                                         />
                                     </div>
 
@@ -200,6 +202,7 @@ function AdminPanel() {
                                             value={formData.option_b}
                                             onChange={handleChange}
                                             required
+                                            className="form-input"
                                         />
                                     </div>
                                 </div>
@@ -215,6 +218,7 @@ function AdminPanel() {
                                             value={formData.option_c}
                                             onChange={handleChange}
                                             required
+                                            className="form-input"
                                         />
                                     </div>
 
@@ -228,11 +232,12 @@ function AdminPanel() {
                                             value={formData.option_d}
                                             onChange={handleChange}
                                             required
+                                            className="form-input"
                                         />
                                     </div>
                                 </div>
 
-                                <div className="form-row">
+                                <div className="form-row form-row-three">
                                     <div className="form-group">
                                         <label htmlFor="correct_answer">Correct Answer</label>
                                         <select
@@ -287,6 +292,40 @@ function AdminPanel() {
                             </form>
                         </section>
 
+                        <section className="admin-section categories-section">
+                            <h2>Manage Categories</h2>
+                            <div className="category-manager">
+                                <form onSubmit={handleAddCategory} className="category-add-form">
+                                    <div className="form-group">
+                                        <input
+                                            type="text"
+                                            placeholder="New Category Name"
+                                            value={categoryName}
+                                            onChange={(e) => setCategoryName(e.target.value)}
+                                            className="form-input"
+                                        />
+                                    </div>
+                                    <button type="submit" className="btn btn-primary btn-sm">
+                                        Add Category
+                                    </button>
+                                </form>
+
+                                <div className="category-list">
+                                    {categories.map(c => (
+                                        <div key={c.id} className="category-item">
+                                            <span>{c.name}</span>
+                                            <button
+                                                className="btn-icon text-danger"
+                                                onClick={() => handleDeleteCategory(c.id)}
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+
                         <section className="admin-section">
                             <h2>Manage Questions ({questions.length})</h2>
                             {fetching ? (
@@ -319,62 +358,67 @@ function AdminPanel() {
                             )}
                         </section>
                     </div>
-
-                    <div className="admin-sidebar">
-                        <section className="admin-section">
-                            <h2>Categories</h2>
-                            <form onSubmit={handleAddCategory} className="category-add-form">
-                                <div className="form-group">
-                                    <input
-                                        type="text"
-                                        placeholder="New Category Name"
-                                        value={categoryName}
-                                        onChange={(e) => setCategoryName(e.target.value)}
-                                        className="form-input"
-                                    />
-                                </div>
-                                <button type="submit" className="btn btn-primary btn-sm btn-full" style={{ marginTop: 'var(--spacing-sm)' }}>
-                                    Add Category
-                                </button>
-                            </form>
-
-                            <div className="category-list" style={{ marginTop: 'var(--spacing-lg)' }}>
-                                {categories.map(c => (
-                                    <div key={c.id} className="category-item" style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: 'var(--spacing-sm) 0',
-                                        borderBottom: '1px solid var(--border)'
-                                    }}>
-                                        <span>{c.name}</span>
-                                        <button
-                                            className="btn-icon text-danger"
-                                            onClick={() => handleDeleteCategory(c.id)}
-                                            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-                                        >
-                                            ×
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </section>
-                    </div>
                 </div>
             </div>
 
             <style dangerouslySetInnerHTML={{
                 __html: `
-                .form-select {
+                .admin-layout {
                     width: 100%;
-                    padding: var(--spacing-md) var(--spacing-lg);
+                    max-width: 1000px;
+                    margin: 0 auto;
+                }
+                .admin-section {
+                    background: var(--bg-glass);
+                    backdrop-filter: blur(20px);
+                    border: 1px solid var(--border);
+                    border-radius: var(--radius-lg);
+                    padding: var(--spacing-xl);
+                    margin-bottom: var(--spacing-xl);
+                }
+                .form-input, .form-select {
+                    width: 100%;
+                    min-height: 48px;
+                    padding: 0 var(--spacing-lg);
                     background: var(--bg-tertiary);
                     border: 1px solid var(--border);
-                    borderRadius: var(--radius-md);
+                    border-radius: var(--radius-md);
                     color: var(--text-primary);
-                    fontSize: var(--font-size-base);
-                    fontFamily: var(--font-family);
-                    cursor: pointer;
+                    font-size: var(--font-size-base);
+                    font-family: var(--font-family);
+                    outline: none;
+                    display: block;
+                }
+                .form-select { cursor: pointer; }
+                .form-row {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: var(--spacing-lg);
+                    margin-bottom: var(--spacing-md);
+                }
+                .form-row-three {
+                    grid-template-columns: repeat(3, 1fr);
+                }
+                .category-add-form {
+                    display: grid;
+                    grid-template-columns: 1fr auto;
+                    gap: var(--spacing-md);
+                    margin-bottom: var(--spacing-lg);
+                    align-items: end;
+                }
+                .category-list {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                    gap: var(--spacing-md);
+                }
+                .category-item {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: var(--spacing-sm) var(--spacing-md);
+                    background: var(--bg-tertiary);
+                    border: 1px solid var(--border);
+                    border-radius: var(--radius-md);
                 }
                 .badge {
                     display: inline-block;
@@ -384,12 +428,23 @@ function AdminPanel() {
                     margin-left: 8px;
                     text-transform: capitalize;
                 }
-                .badge-category { background: var(--primary-color); color: white; }
-                .badge-easy { background: #28a745; color: white; }
+                .badge-category { background: var(--primary); color: white; }
+                .badge-easy { background: var(--success); color: white; }
                 .badge-medium { background: #ffc107; color: #333; }
-                .badge-hard { background: #dc3545; color: white; }
-                .admin-section { margin-bottom: var(--spacing-xl); }
-                .q-meta { display: flex; align-items: center; margin-top: var(--spacing-sm); font-size: 0.9rem; color: var(--text-secondary); }
+                .badge-hard { background: var(--error); color: white; }
+                .btn-icon { background: none; border: none; cursor: pointer; font-size: 1.2rem; color: inherit; }
+                
+                @media (max-width: 768px) {
+                    .form-row, .form-row-three, .category-add-form {
+                        grid-template-columns: 1fr;
+                    }
+                    .admin-section {
+                        padding: var(--spacing-lg);
+                    }
+                    .category-list {
+                        grid-template-columns: 1fr;
+                    }
+                }
             `}} />
         </div>
     );
