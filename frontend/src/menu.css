@@ -152,14 +152,28 @@
 
 @media (max-width: 768px) {
     .dropdown-menu {
-        min-width: 200px;
-        width: 260px;
-        max-width: calc(100vw - 32px);
-        /* Full width minus padding */
-        right: -5px;
-        /* Slight offset to align visual edge */
-        left: auto;
-        transform-origin: top right;
+        position: fixed;
+        top: 80px;
+        /* Below the header */
+        right: 16px;
+        left: 16px;
+        width: auto;
+        min-width: 0;
+        max-width: none;
+        transform: none;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .stats-grid {
+        gap: var(--spacing-xs);
+    }
+
+    .stat-box {
+        padding: var(--spacing-xs);
+    }
+
+    .stat-box-value {
+        font-size: var(--font-size-lg);
     }
 
     .percentage-badge {
