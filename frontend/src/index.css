@@ -525,8 +525,24 @@ body {
 
 /* Admin Panel */
 .admin-panel {
-  min-height: 100vh;
-  padding: var(--spacing-xl);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.admin-panel .container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+  .admin-panel .container {
+    padding: var(--spacing-xl);
+  }
 }
 
 .admin-form {
@@ -534,10 +550,18 @@ body {
   backdrop-filter: blur(20px);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-2xl);
+  padding: var(--spacing-xl);
+  width: 100%;
   max-width: 800px;
-  margin: var(--spacing-xl) auto;
+  margin: 0 auto var(--spacing-xl);
   box-shadow: var(--shadow-lg);
+}
+
+@media (min-width: 768px) {
+  .admin-form {
+    padding: var(--spacing-2xl);
+    margin: var(--spacing-xl) auto;
+  }
 }
 
 .admin-form h2 {
