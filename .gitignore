@@ -9,6 +9,10 @@ venv/
 .venv/
 *.env
 
+# Scripts and Data
+import_questions.py
+questions.json
+
 # Node
 node_modules/
 dist/
