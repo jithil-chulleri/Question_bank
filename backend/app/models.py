@@ -26,7 +26,7 @@ class Question(Base):
     correct_answer = Column(String, nullable=False)  # 'A', 'B', 'C', or 'D'
     created_at = Column(DateTime, default=datetime.utcnow)
     
-    answers = relationship("UserAnswer", back_populates="question")
+    answers = relationship("UserAnswer", back_populates="question", cascade="all, delete-orphan")
 
 class UserAnswer(Base):
     __tablename__ = "user_answers"

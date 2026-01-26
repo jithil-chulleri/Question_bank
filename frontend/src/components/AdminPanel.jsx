@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 
@@ -13,8 +13,25 @@ function AdminPanel() {
     });
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
+    const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [fetching, setFetching] = useState(true);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        fetchQuestions();
+    }, []);
+
+    const fetchQuestions = async () => {
+        try {
+            const response = await api.get('/admin/questions');
+            setQuestions(response.data);
+        } catch (err) {
+            console.error('Failed to fetch questions:', err);
+        } finally {
+            setFetching(false);
+        }
+    };
 
     const handleChange = (e) => {
         setFormData({
@@ -40,10 +57,26 @@ function AdminPanel() {
                 option_d: '',
                 correct_answer: 'A',
             });
+            fetchQuestions(); // Refresh the list
         } catch (err) {
             setError(err.response?.data?.detail || 'Failed to add question');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm('Are you sure you want to delete this question? This will also delete all user answers related to it.')) {
+            return;
+        }
+
+        try {
+            await api.delete(`/admin/questions/${id}`);
+            setSuccess('Question deleted successfully!');
+            fetchQuestions(); // Refresh the list
+        } catch (err) {
+            setError('Failed to delete question');
+            console.error(err);
         }
     };
 
@@ -163,6 +196,33 @@ function AdminPanel() {
                             {loading ? 'Adding Question...' : 'Add Question'}
                         </button>
                     </form>
+                    <div className="admin-questions-list">
+                        <h2>Manage Questions ({questions.length})</h2>
+                        {fetching ? (
+                            <div className="loading">
+                                <div className="spinner"></div>
+                                <p>Loading questions...</p>
+                            </div>
+                        ) : (
+                            <div className="admin-questions-grid">
+                                {questions.map((q) => (
+                                    <div key={q.id} className="admin-question-item">
+                                        <div className="q-info">
+                                            <div className="q-text">{q.question_text}</div>
+                                            <div className="q-meta">Correct Answer: {q.correct_answer}</div>
+                                        </div>
+                                        <button
+                                            className="btn btn-sm btn-danger"
+                                            onClick={() => handleDelete(q.id)}
+                                            title="Delete Question"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
