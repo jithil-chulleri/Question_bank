@@ -153,13 +153,13 @@
 @media (max-width: 768px) {
     .dropdown-menu {
         min-width: 200px;
-        /* Reduced min width */
         width: 260px;
-        max-width: 90vw;
-        /* Ensure it fits on screen */
-        right: 0;
-        /* Align with right edge of container */
+        max-width: calc(100vw - 32px);
+        /* Full width minus padding */
+        right: -5px;
+        /* Slight offset to align visual edge */
         left: auto;
+        transform-origin: top right;
     }
 
     .percentage-badge {

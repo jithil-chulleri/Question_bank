@@ -646,11 +646,13 @@ body {
   }
 
   .navigation-buttons {
-    flex-direction: column;
+    flex-direction: row;
+    gap: var(--spacing-md);
   }
 
   .navigation-buttons .btn {
-    max-width: 100%;
+    max-width: none;
+    flex: 1;
   }
 
   .auth-card {
