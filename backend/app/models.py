@@ -14,6 +14,15 @@ class User(Base):
     
     answers = relationship("UserAnswer", back_populates="user")
 
+class Category(Base):
+    __tablename__ = "categories"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    questions = relationship("Question", back_populates="category")
+
 class Question(Base):
     __tablename__ = "questions"
     
@@ -24,8 +33,11 @@ class Question(Base):
     option_c = Column(String, nullable=False)
     option_d = Column(String, nullable=False)
     correct_answer = Column(String, nullable=False)  # 'A', 'B', 'C', or 'D'
+    hardness = Column(String, nullable=True)  # 'easy', 'medium', 'hard'
+    category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     
+    category = relationship("Category", back_populates="questions")
     answers = relationship("UserAnswer", back_populates="question", cascade="all, delete-orphan")
 
 class UserAnswer(Base):

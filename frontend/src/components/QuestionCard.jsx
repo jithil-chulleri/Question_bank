@@ -46,7 +46,17 @@ function QuestionCard({ question, index, onAnswerSubmitted }) {
 
     return (
         <div className="question-card">
-            <span className="question-number">Question {index + 1}</span>
+            <div className="question-header">
+                <span className="question-number">Question {index + 1}</span>
+                <div className="question-badges">
+                    {question.category && (
+                        <span className="badge badge-category">{question.category.name}</span>
+                    )}
+                    {question.hardness && (
+                        <span className={`badge badge-${question.hardness}`}>{question.hardness}</span>
+                    )}
+                </div>
+            </div>
             <h3 className="question-text">{question.question_text}</h3>
 
             <div className="options">
@@ -89,6 +99,36 @@ function QuestionCard({ question, index, onAnswerSubmitted }) {
                     )}
                 </div>
             )}
+
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                .question-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: var(--spacing-lg);
+                }
+                .question-badges {
+                    display: flex;
+                    gap: var(--spacing-sm);
+                }
+                .badge {
+                    display: inline-block;
+                    padding: 4px 10px;
+                    border-radius: 20px;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    text-transform: capitalize;
+                }
+                .badge-category {
+                    background: rgba(var(--primary-color-rgb, 99, 102, 241), 0.1);
+                    color: var(--primary-color);
+                    border: 1px solid rgba(var(--primary-color-rgb, 99, 102, 241), 0.2);
+                }
+                .badge-easy { background: rgba(40, 167, 69, 0.1); color: #28a745; border: 1px solid rgba(40, 167, 69, 0.2); }
+                .badge-medium { background: rgba(255, 193, 7, 0.1); color: #d39e00; border: 1px solid rgba(255, 193, 7, 0.2); }
+                .badge-hard { background: rgba(220, 53, 69, 0.1); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.2); }
+            `}} />
         </div>
     );
 }

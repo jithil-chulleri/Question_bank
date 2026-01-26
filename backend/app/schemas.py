@@ -25,6 +25,20 @@ class Token(BaseModel):
     token_type: str
     is_admin: bool
 
+# Category Schemas
+class CategoryBase(BaseModel):
+    name: str
+
+class CategoryCreate(CategoryBase):
+    pass
+
+class Category(CategoryBase):
+    id: int
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
 # Question Schemas
 class QuestionBase(BaseModel):
     question_text: str
@@ -33,6 +47,8 @@ class QuestionBase(BaseModel):
     option_c: str
     option_d: str
     correct_answer: str
+    hardness: Optional[str] = None
+    category_id: Optional[int] = None
 
 class QuestionCreate(QuestionBase):
     pass
@@ -45,6 +61,9 @@ class QuestionResponse(BaseModel):
     option_c: str
     option_d: str
     correct_answer: Optional[str] = None  # Only shown to admin
+    hardness: Optional[str] = None
+    category_id: Optional[int] = None
+    category: Optional[Category] = None
     created_at: datetime
     
     class Config:

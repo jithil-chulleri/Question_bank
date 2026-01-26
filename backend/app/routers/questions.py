@@ -1,18 +1,33 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from .. import models, schemas, auth
 from ..database import get_db
 
 router = APIRouter(prefix="/api/questions", tags=["questions"])
 
-@router.get("", response_model=List[schemas.QuestionResponse])
-def get_questions(
+@router.get("/categories", response_model=List[schemas.Category])
+def get_categories(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(auth.get_current_user)
 ):
-    questions = db.query(models.Question).all()
+    return db.query(models.Category).all()
+
+@router.get("", response_model=List[schemas.QuestionResponse])
+def get_questions(
+    category_id: Optional[int] = None,
+    hardness: Optional[str] = None,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    query = db.query(models.Question)
+    if category_id:
+        query = query.filter(models.Question.category_id == category_id)
+    if hardness:
+        query = query.filter(models.Question.hardness == hardness)
+    
+    questions = query.all()
     
     # Don't show correct answer to non-admin users
     if not current_user.is_admin:
